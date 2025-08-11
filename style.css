@@ -1,0 +1,126 @@
+/* Grundlegende Gestaltung für die Multitrack‑Website */
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #fafafa;
+    color: #333;
+}
+
+header {
+    background: #222;
+    color: #fff;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0 0 0.5rem;
+    font-size: 2rem;
+}
+
+header p {
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+main {
+    padding: 2rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.song-container {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    background: #fff;
+}
+
+.song-title {
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.controls {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.controls button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: #008CBA;
+    color: white;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.controls button:hover {
+    background-color: #006f94;
+}
+
+.controls button:disabled {
+    background-color: #aaa;
+    cursor: default;
+}
+
+.track-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.track {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    padding: 0.5rem;
+    background: #f9f9f9;
+}
+
+.track-name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.track-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.track-buttons button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: #eee;
+    color: #333;
+    transition: background-color 0.2s ease;
+}
+
+.track-buttons button.active {
+    background-color: #ffb703;
+    color: #222;
+}
+
+.track-buttons button:hover {
+    background-color: #ddd;
+}
+
+footer {
+    background: #f0f0f0;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #666;
+}

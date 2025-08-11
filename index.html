@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meine Musik – Multitrack‑Player</title>
+    <!--
+      Diese kleine Website nutzt den Web‑Audio‑API‑Player aus player.js, um mehrere
+      Spuren synchron abzuspielen. Über Solo und Mute lässt sich jede Spur
+      isoliert anhören oder stumm schalten. Sie können diese Seite lokal
+      betreiben oder beispielsweise über GitHub Pages kostenlos veröffentlichen.
+    -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Meine Musik – Multitrack‑Player</h1>
+        <p>
+            Unten findest du einen Multitrack‑Player für deine Songs. Jeder Song
+            besteht aus fünf Spuren: Drums, Gitarre&nbsp;+&nbsp;Piano, Synth,
+            Gesang sowie Streicher&nbsp;&amp;&nbsp;Bläser. Über die Buttons
+            «Solo» und «Mute» kannst du Spuren isoliert hören oder stumm schalten.
+        </p>
+    </header>
+
+    <main id="players">
+        <!--
+          Die Spieler werden von player.js dynamisch erzeugt. Jede Song‑Konfiguration
+          steht im Array songs in player.js. Um eigene Songs hinzuzufügen,
+          ergänze dort einfach einen neuen Eintrag und lege die Audiodateien im
+          passenden Verzeichnis ab.
+        -->
+    </main>
+
+    <footer>
+        <p>
+            Dieses Projekt verwendet den Web&nbsp;Audio&nbsp;API zum
+            synchronen Abspielen mehrerer Audiodateien in modernen Browsern.
+        </p>
+    </footer>
+
+    <script src="player.js"></script>
+</body>
+</html>
