@@ -1,30 +1,16 @@
-# Multitrack‑Player mit Timebar (Seek)
-- 5 Spuren je Song (Drums, Gitarren+Piano, Synth, Vocals, Streicher/Bläser)
-- Solo/Mute je Spur, Lautstärke je Spur
-- **Timebar zum Springen** innerhalb des Songs (vor/zurück)
+# Multitrack‑Player – Auto-Scan (kein Manifest)
+- Keine Code‑ oder JSON‑Änderungen nötig.
+- Lege einfach Ordner `audio/song-1`, `audio/song-2`, … an.
+- In jeden Ordner gehören genau 5 Dateien mit **fixen Namen**:
+  - `drums.wav`
+  - `guitars_piano.wav`
+  - `synth.wav`
+  - `vocals.wav`
+  - `strings_brass.wav`
 
-## Dateien
-- `index.html` – UI und Grundgerüst
-- `style.css` – schlichtes Dark‑Theme
-- `player.js` – Web‑Audio‑Logik (Laden, Play/Pause/Stop, Solo/Mute, Seek)
-- `audio/song1/...` – Beispiel‑Ordner; ersetze die Dateien durch deine echten Stems
+Die Seite erkennt beim Laden automatisch vorhandene Songs (scannt `song-1` bis `song-200`).
 
-## Eigene Songs
-Lege für jeden Song einen Ordner unter `audio/` mit **genau fünf** Dateien an und passe im `player.js` im `SONGS`‑Array die Pfade an.
-
-## Manifest (keine Code-Änderungen mehr)
-Songs werden aus `audio/manifest.json` geladen. Für jeden Song ein Eintrag:
-```json
-{
-  "id": "song2",
-  "title": "Mein neuer Song",
-  "stems": [
-    {"name": "Drums", "file": "audio/song2/drums.wav"},
-    {"name": "Gitarren + Piano", "file": "audio/song2/guitars_piano.wav"},
-    {"name": "Synth", "file": "audio/song2/synth.wav"},
-    {"name": "Vocals", "file": "audio/song2/vocals.wav"},
-    {"name": "Streicher & Bläser", "file": "audio/song2/strings_brass.wav"}
-  ]
-}
-```
-Einfach Ordner `audio/song2/` mit 5 Dateien anlegen und den Block in `manifest.json` ergänzen – fertig.
+**Hinweise**
+- Pfade/Schreibweise sind case‑sensitive.
+- Andere Dateiformate (mp3/ogg) gehen, wenn du die Namen entsprechend anpasst und im Code änderst – für „no‑code“ bleib bei `.wav` und den festen Dateinamen.
+- GitHub Pages braucht nach Upload 1–2 Minuten. Danach Seite hart neu laden (Cmd/Ctrl‑Shift‑R).

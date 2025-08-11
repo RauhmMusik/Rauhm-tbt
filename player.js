@@ -1,4 +1,4 @@
-// Multitrack-Player mit Timebar (Web Audio API) – Manifest-Variante
+// Multitrack-Player mit Timebar – Auto-Scan Version (kein Manifest nötig)
 (() => {
   const tracksEl = document.getElementById('tracks');
   const seekEl = document.getElementById('seek');
@@ -9,7 +9,17 @@
   const btnPause = document.getElementById('btnPause');
   const btnStop = document.getElementById('btnStop');
 
-  // Wird aus /audio/manifest.json geladen
+  // Scan-Parameter
+  const PREFIX = 'song-';
+  const MAX_SONGS = 200; // durchsucht audio/song-1 .. audio/song-200
+  const STEMS = [
+    { name: 'Drums',            file: 'drums.wav' },
+    { name: 'Gitarren + Piano', file: 'guitars_piano.wav' },
+    { name: 'Synth',            file: 'synth.wav' },
+    { name: 'Vocals',           file: 'vocals.wav' },
+    { name: 'Streicher & Bläser', file: 'strings_brass.wav' },
+  ];
+
   let SONGS = [];
 
   // --- Player-State ---
@@ -41,6 +51,34 @@
       masterGain.gain.value = 1;
       masterGain.connect(audioCtx.destination);
     }
+  }
+
+  async function exists(url) {
+    try {
+      // kleine Anfrage: wir versuchen nur eine winzige Range (falls unterstützt), fällt sonst auf normalen GET zurück
+      const res = await fetch(url, { headers: { 'Range': 'bytes=0-0' } });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }
+
+  async function autoScanSongs() {
+    const found = [];
+    for (let i = 1; i <= MAX_SONGS; i++) {
+      const id = `${PREFIX}${i}`;
+      const testUrl = `audio/${id}/${STEMS[0].file}`; // prüfe z. B. Drums
+      // eslint-disable-next-line no-await-in-loop
+      const ok = await exists(testUrl);
+      if (ok) {
+        found.push({
+          id,
+          title: `Song ${i}`,
+          stems: STEMS.map(s => ({ name: s.name, file: `audio/${id}/${s.file}` }))
+        });
+      }
+    }
+    return found;
   }
 
   async function loadSong(song) {
@@ -207,20 +245,23 @@
     requestAnimationFrame(() => updateTimeLoop());
   }
 
-  // Manifest laden und UI füllen
-  async function loadManifest() {
-    const res = await fetch('audio/manifest.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error('manifest.json nicht gefunden');
-    const data = await res.json();
-    if (!Array.isArray(data.songs)) throw new Error('Ungültiges Manifest');
-    SONGS = data.songs.map(s => ({
-      id: s.id,
-      title: s.title,
-      stems: s.stems // Erwartet 5 Objekte mit {name, file}
-    }));
-  }
-
-  function buildSongSelect() {
+  async function init() {
+    // Auto-Scan
+    const songs = await autoScanSongs();
+    SONGS = songs;
+    // Fallback: falls nichts gefunden wurde, zeige Beispiel song1, wenn vorhanden
+    if (!songs.length) {
+      // Versuche song1
+      const ok = await exists('audio/song1/drums.wav');
+      if (ok) {
+        SONGS = [{
+          id: 'song1',
+          title: 'Song 1',
+          stems: STEMS.map(s => ({ name: s.name, file: `audio/song1/${s.file}`}))
+        }];
+      }
+    }
+    // Dropdown
     songSelect.innerHTML = '';
     SONGS.forEach(s => {
       const opt = document.createElement('option');
@@ -232,12 +273,11 @@
       const song = SONGS.find(s => s.id === songSelect.value);
       if (song) await loadSong(song);
     });
-    if (SONGS[0]) songSelect.value = SONGS[0].id;
+    if (SONGS[0]) {
+      songSelect.value = SONGS[0].id;
+      await loadSong(SONGS[0]);
+    }
   }
 
-  (async function init() {
-    await loadManifest();
-    buildSongSelect();
-    if (SONGS[0]) await loadSong(SONGS[0]);
-  })();
+  init();
 })();
