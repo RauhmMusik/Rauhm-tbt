@@ -3,42 +3,65 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Multitrack‑Player mit Timebar</title>
+  <title>Multitrack‑Player</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>Meine Musik – Multitrack‑Player</h1>
-    <p>5 Spuren je Song: Drums · Gitarre+Piano · Synth · Vocals · Streicher/Bläser</p>
+  <header class="hero">
+    <div class="hero__inner">
+      <div class="brand">
+        <div class="brand__logo" aria-hidden="true">♫</div>
+        <div class="brand__text">
+          <h1>Meine Musik</h1>
+          <p>Höre einzelne Spuren – wie in der DAW. Keine Installation.</p>
+        </div>
+      </div>
+      <div class="hero__actions">
+        <button id="themeToggle" class="btn btn--ghost" title="Theme umschalten">Theme</button>
+        <a class="btn btn--ghost" href="README.md" target="_blank" rel="noopener">Hilfe</a>
+      </div>
+    </div>
   </header>
 
   <main class="container">
-    <section class="player">
-      <div class="row gap">
-        <label for="songSelect">Song:</label>
-        <select id="songSelect" class="select"></select>
+    <section class="player card">
+      <div class="player__head">
+        <div class="coverwrap">
+          <img id="cover" class="cover" alt="" />
+          <div class="cover__ph" id="coverPh">Kein Cover</div>
+        </div>
+        <div class="controls">
+          <div class="row gap">
+            <label for="songSelect" class="label">Song</label>
+            <select id="songSelect" class="select"></select>
+          </div>
 
-        <button id="btnPlay" class="btn btn--play">Play</button>
-        <button id="btnPause" class="btn btn--pause">Pause</button>
-        <button id="btnStop" class="btn btn--stop">Stop</button>
-      </div>
+          <div class="buttons">
+            <button id="btnPlay" class="btn btn--play" title="Leertaste">Play</button>
+            <button id="btnPause" class="btn btn--pause">Pause</button>
+            <button id="btnStop" class="btn btn--stop">Stop</button>
+            <button id="btnReset" class="btn btn--ghost" title="Mix zurücksetzen">Reset Mix</button>
+            <button id="btnExport" class="btn btn--ghost" title="Aktuellen Mix als WAV exportieren">Export Mix (WAV)</button>
+          </div>
 
-      <div class="timebar">
-        <input type="range" id="seek" min="0" max="100" value="0" step="0.1" />
-        <div class="timecodes">
-          <span id="cur">0:00</span> / <span id="dur">0:00</span>
+          <div class="timebar">
+            <input type="range" id="seek" min="0" max="100" value="0" step="0.1" />
+            <div class="timecodes">
+              <span id="cur">0:00</span> / <span id="dur">0:00</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div id="tracks" class="tracks"></div>
-
-      <details class="hint">
-        <summary>Hinweis</summary>
-        <p>Lege deine Audiodateien unter <code>audio/&lt;song-id&gt;/</code> ab.
-        Unterstützte Formate hängen vom Browser ab (z. B. WAV, MP3, AAC, OGG).</p>
-      </details>
     </section>
   </main>
+
+  <div id="overlay" class="overlay" hidden>
+    <div class="spinner" aria-label="Lade"></div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
 
   <script src="player.js"></script>
 </body>
