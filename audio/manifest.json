@@ -1,0 +1,30 @@
+{
+  "songs": [
+    {
+      "id": "song1",
+      "title": "Beispiel‑Song 1",
+      "stems": [
+        {
+          "name": "Drums",
+          "file": "audio/song1/drums.wav"
+        },
+        {
+          "name": "Gitarren + Piano",
+          "file": "audio/song1/guitars_piano.wav"
+        },
+        {
+          "name": "Synth",
+          "file": "audio/song1/synth.wav"
+        },
+        {
+          "name": "Vocals",
+          "file": "audio/song1/vocals.wav"
+        },
+        {
+          "name": "Streicher & Bläser",
+          "file": "audio/song1/strings_brass.wav"
+        }
+      ]
+    }
+  ]
+}

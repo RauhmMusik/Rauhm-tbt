@@ -1,4 +1,4 @@
-// Multitrack-Player mit Timebar (Web Audio API)
+// Multitrack-Player mit Timebar (Web Audio API) – Manifest-Variante
 (() => {
   const tracksEl = document.getElementById('tracks');
   const seekEl = document.getElementById('seek');
@@ -9,40 +9,24 @@
   const btnPause = document.getElementById('btnPause');
   const btnStop = document.getElementById('btnStop');
 
-  // --- Songs konfigurieren (einfach erweiterbar) ---
-  // Ersetze die .wav/.mp3-Dateien durch deine echten Stems.
-  const SONGS = [
-    {
-      id: 'song1',
-      title: 'Beispiel‑Song 1',
-      // Reihenfolge und Beschriftung fix gemäß Wunsch
-      stems: [
-        { name: 'Drums',           file: 'audio/song1/drums.wav' },
-        { name: 'Gitarren + Piano',file: 'audio/song1/guitars_piano.wav' },
-        { name: 'Synth',           file: 'audio/song1/synth.wav' },
-        { name: 'Vocals',          file: 'audio/song1/vocals.wav' },
-        { name: 'Streicher & Bläser', file: 'audio/song1/strings_brass.wav' },
-      ]
-    }
-  ];
+  // Wird aus /audio/manifest.json geladen
+  let SONGS = [];
 
   // --- Player-State ---
-  let audioCtx;                   // AudioContext
-  let masterGain;                 // Master-Gain (für künftige Erweiterungen)
-  let currentSong = null;         // Objekt aus SONGS
-  let buffers = [];               // AudioBuffer je Spur
-  let gains = [];                 // GainNode je Spur
-  let sources = [];               // laufende BufferSourceNodes
-  let muted = [];                 // booleans
-  let solo = [];                  // booleans
-  let volumes = [];               // 0..1
-
-  let duration = 0;               // Sekunden
+  let audioCtx;
+  let masterGain;
+  let currentSong = null;
+  let buffers = [];
+  let gains = [];
+  let sources = [];
+  let muted = [];
+  let solo = [];
+  let volumes = [];
+  let duration = 0;
   let playing = false;
-  let startTimestamp = 0;         // audioCtx.currentTime zum Start
-  let offset = 0;                 // aktuelle Startposition beim (Re)Start
+  let startTimestamp = 0;
+  let offset = 0;
 
-  // --- Hilfsfunktionen ---
   const fmt = (sec) => {
     sec = Math.max(0, sec);
     const m = Math.floor(sec / 60);
@@ -62,10 +46,8 @@
   async function loadSong(song) {
     ensureCtx();
     currentSong = song;
-    // Stop evtl. laufende Wiedergabe
     hardStop();
 
-    // Laden
     buffers = [];
     const decodes = song.stems.map(async stem => {
       const res = await fetch(stem.file);
@@ -79,7 +61,6 @@
     offset = 0;
     seekEl.value = 0;
 
-    // Gains / States initialisieren
     gains = buffers.map(() => {
       const g = audioCtx.createGain();
       g.gain.value = 1;
@@ -90,7 +71,6 @@
     muted = buffers.map(() => false);
     solo  = buffers.map(() => false);
 
-    // UI bauen
     renderTracksUI();
     updateGainsFromState();
     updateTimeLoop(true);
@@ -116,7 +96,6 @@
       tracksEl.appendChild(row);
     });
 
-    // Events
     tracksEl.querySelectorAll('.tbtn.solo').forEach(btn => {
       btn.addEventListener('click', () => {
         const i = +btn.dataset.idx;
@@ -156,7 +135,6 @@
   }
 
   function createSources(atOffset) {
-    // Vorhandene Quellen stoppen
     sources.forEach(s => { try { s.stop(); } catch(e){} });
     sources = [];
     buffers.forEach((buf, i) => {
@@ -190,7 +168,6 @@
 
   function pause() {
     if (!playing) return;
-    // aktuelle Zeit ermitteln
     const now = Math.min(duration, Math.max(0, audioCtx.currentTime - startTimestamp));
     offset = now;
     sources.forEach(s => { try { s.stop(); } catch(e){} });
@@ -198,9 +175,7 @@
     playing = false;
   }
 
-  function stop() {
-    hardStop();
-  }
+  function stop() { hardStop(); }
 
   function seekTo(norm01) {
     const newTime = Math.max(0, Math.min(1, norm01)) * duration;
@@ -208,49 +183,46 @@
     if (playing) {
       createSources(offset);
     } else {
-      // nur Anzeige aktualisieren
       curEl.textContent = fmt(offset);
     }
   }
 
-  // UI-Events
   btnPlay.addEventListener('click', play);
   btnPause.addEventListener('click', pause);
   btnStop.addEventListener('click', stop);
-
   seekEl.addEventListener('input', (e) => {
     const v = parseFloat(e.target.value) / 100;
     seekTo(v);
   });
 
-  // Zeit-UI Loop
   function updateTimeLoop(jump=false) {
-    if (!duration) {
-      requestAnimationFrame(() => updateTimeLoop());
-      return;
-    }
+    if (!duration) { requestAnimationFrame(() => updateTimeLoop()); return; }
     const t = playing ? (audioCtx.currentTime - startTimestamp) : offset;
     const clamped = Math.max(0, Math.min(duration, t));
-    if (jump) {
-      // initiales Setzen
+    if (document.activeElement !== seekEl || jump) {
       seekEl.value = (clamped / duration) * 100;
-    } else {
-      // vermeide Rücksprung, wenn der Nutzer gerade zieht -> wir sind im 'input' Event schon aktiv
-      if (document.activeElement !== seekEl) {
-        seekEl.value = (clamped / duration) * 100;
-      }
     }
     curEl.textContent = fmt(clamped);
-    // Auto-Stopp am Ende
-    if (playing && clamped >= duration - 0.02) {
-      stop();
-    }
+    if (playing && clamped >= duration - 0.02) { stop(); }
     requestAnimationFrame(() => updateTimeLoop());
   }
 
-  // Song-Auswahl aufbauen
+  // Manifest laden und UI füllen
+  async function loadManifest() {
+    const res = await fetch('audio/manifest.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('manifest.json nicht gefunden');
+    const data = await res.json();
+    if (!Array.isArray(data.songs)) throw new Error('Ungültiges Manifest');
+    SONGS = data.songs.map(s => ({
+      id: s.id,
+      title: s.title,
+      stems: s.stems // Erwartet 5 Objekte mit {name, file}
+    }));
+  }
+
   function buildSongSelect() {
-    SONGS.forEach((s, idx) => {
+    songSelect.innerHTML = '';
+    SONGS.forEach(s => {
       const opt = document.createElement('option');
       opt.value = s.id;
       opt.textContent = s.title;
@@ -260,13 +232,12 @@
       const song = SONGS.find(s => s.id === songSelect.value);
       if (song) await loadSong(song);
     });
-    // ersten Song laden
-    songSelect.value = SONGS[0].id;
+    if (SONGS[0]) songSelect.value = SONGS[0].id;
   }
 
-  // Start
   (async function init() {
+    await loadManifest();
     buildSongSelect();
-    await loadSong(SONGS[0]);
+    if (SONGS[0]) await loadSong(SONGS[0]);
   })();
 })();

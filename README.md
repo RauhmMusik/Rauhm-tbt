@@ -12,5 +12,19 @@
 ## Eigene Songs
 Lege für jeden Song einen Ordner unter `audio/` mit **genau fünf** Dateien an und passe im `player.js` im `SONGS`‑Array die Pfade an.
 
-## Hosting
-Statisch, daher kostenlos über z. B. GitHub Pages. Lade den **Inhalt** dieses Ordners in dein Repo‑Root hoch (inkl. `audio/`) und aktiviere Pages (Branch: `main`, Folder: `/`).
+## Manifest (keine Code-Änderungen mehr)
+Songs werden aus `audio/manifest.json` geladen. Für jeden Song ein Eintrag:
+```json
+{
+  "id": "song2",
+  "title": "Mein neuer Song",
+  "stems": [
+    {"name": "Drums", "file": "audio/song2/drums.wav"},
+    {"name": "Gitarren + Piano", "file": "audio/song2/guitars_piano.wav"},
+    {"name": "Synth", "file": "audio/song2/synth.wav"},
+    {"name": "Vocals", "file": "audio/song2/vocals.wav"},
+    {"name": "Streicher & Bläser", "file": "audio/song2/strings_brass.wav"}
+  ]
+}
+```
+Einfach Ordner `audio/song2/` mit 5 Dateien anlegen und den Block in `manifest.json` ergänzen – fertig.
