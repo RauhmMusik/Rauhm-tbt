@@ -1,44 +1,45 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine Musik – Multitrack‑Player</title>
-    <!--
-      Diese kleine Website nutzt den Web‑Audio‑API‑Player aus player.js, um mehrere
-      Spuren synchron abzuspielen. Über Solo und Mute lässt sich jede Spur
-      isoliert anhören oder stumm schalten. Sie können diese Seite lokal
-      betreiben oder beispielsweise über GitHub Pages kostenlos veröffentlichen.
-    -->
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Multitrack‑Player mit Timebar</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <header>
-        <h1>Meine Musik – Multitrack‑Player</h1>
-        <p>
-            Unten findest du einen Multitrack‑Player für deine Songs. Jeder Song
-            besteht aus fünf Spuren: Drums, Gitarre&nbsp;+&nbsp;Piano, Synth,
-            Gesang sowie Streicher&nbsp;&amp;&nbsp;Bläser. Über die Buttons
-            «Solo» und «Mute» kannst du Spuren isoliert hören oder stumm schalten.
-        </p>
-    </header>
+  <header>
+    <h1>Meine Musik – Multitrack‑Player</h1>
+    <p>5 Spuren je Song: Drums · Gitarre+Piano · Synth · Vocals · Streicher/Bläser</p>
+  </header>
 
-    <main id="players">
-        <!--
-          Die Spieler werden von player.js dynamisch erzeugt. Jede Song‑Konfiguration
-          steht im Array songs in player.js. Um eigene Songs hinzuzufügen,
-          ergänze dort einfach einen neuen Eintrag und lege die Audiodateien im
-          passenden Verzeichnis ab.
-        -->
-    </main>
+  <main class="container">
+    <section class="player">
+      <div class="row gap">
+        <label for="songSelect">Song:</label>
+        <select id="songSelect" class="select"></select>
 
-    <footer>
-        <p>
-            Dieses Projekt verwendet den Web&nbsp;Audio&nbsp;API zum
-            synchronen Abspielen mehrerer Audiodateien in modernen Browsern.
-        </p>
-    </footer>
+        <button id="btnPlay" class="btn">Play</button>
+        <button id="btnPause" class="btn">Pause</button>
+        <button id="btnStop" class="btn">Stop</button>
+      </div>
 
-    <script src="player.js"></script>
+      <div class="timebar">
+        <input type="range" id="seek" min="0" max="100" value="0" step="0.1" />
+        <div class="timecodes">
+          <span id="cur">0:00</span> / <span id="dur">0:00</span>
+        </div>
+      </div>
+
+      <div id="tracks" class="tracks"></div>
+
+      <details class="hint">
+        <summary>Hinweis</summary>
+        <p>Lege deine Audiodateien unter <code>audio/&lt;song-id&gt;/</code> ab.
+        Unterstützte Formate hängen vom Browser ab (z. B. WAV, MP3, AAC, OGG).</p>
+      </details>
+    </section>
+  </main>
+
+  <script src="player.js"></script>
 </body>
 </html>

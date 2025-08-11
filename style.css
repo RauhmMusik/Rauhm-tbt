@@ -1,126 +1,58 @@
-/* Grundlegende Gestaltung für die Multitrack‑Website */
-body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #fafafa;
-    color: #333;
+/* Minimal, sauber */
+:root {
+  --bg: #0b0c10;
+  --card: #121317;
+  --fg: #e6e6e6;
+  --muted: #9aa0a6;
+  --brand: #7dd3fc;
+  --accent: #60a5fa;
+  --danger: #ef4444;
+  --ok: #22c55e;
 }
 
-header {
-    background: #222;
-    color: #fff;
-    padding: 2rem 1rem;
-    text-align: center;
-}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
 
-header h1 {
-    margin: 0 0 0.5rem;
-    font-size: 2rem;
-}
+header { text-align: center; padding: 2rem 1rem; background: linear-gradient(180deg, #11131a, #0b0c10); border-bottom: 1px solid #1f2430; }
+h1 { margin: 0 0 .25rem; font-weight: 700; letter-spacing: .3px; }
+header p { margin: 0; color: var(--muted); }
 
-header p {
-    max-width: 700px;
-    margin: 0 auto;
-    line-height: 1.5;
-}
+.container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+.player { background: var(--card); border: 1px solid #1f2430; border-radius: 14px; padding: 1rem; box-shadow: 0 6px 24px rgba(0,0,0,.25); }
 
-main {
-    padding: 2rem 1rem;
-    max-width: 800px;
-    margin: 0 auto;
-}
+.row { display: flex; align-items: center; flex-wrap: wrap; }
+.gap { gap: .5rem; }
 
-.song-container {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 1rem;
-    margin-bottom: 2rem;
-    background: #fff;
-}
+.select, .btn { background: #1a1f2a; color: var(--fg); border: 1px solid #2a3242; border-radius: 10px; padding: .55rem .8rem; }
+.select { min-width: 220px; }
+.btn { cursor: pointer; }
+.btn:hover { border-color: var(--brand); }
 
-.song-title {
-    margin: 0 0 1rem;
-    font-size: 1.25rem;
-    font-weight: bold;
-}
+.timebar { display: grid; grid-template-columns: 1fr auto; gap: .5rem; align-items: center; margin: 1rem 0 1.25rem; }
+#seek { width: 100%; accent-color: var(--accent); }
+.timecodes { color: var(--muted); font-variant-numeric: tabular-nums; }
 
-.controls {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.controls button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    background-color: #008CBA;
-    color: white;
-    font-size: 0.9rem;
-    transition: background-color 0.2s ease;
-}
-
-.controls button:hover {
-    background-color: #006f94;
-}
-
-.controls button:disabled {
-    background-color: #aaa;
-    cursor: default;
-}
-
-.track-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
+.tracks { display: grid; gap: .5rem; }
 .track {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 1px solid #eee;
-    border-radius: 3px;
-    padding: 0.5rem;
-    background: #f9f9f9;
+  display: grid;
+  grid-template-columns: 1fr auto auto 160px;
+  gap: .5rem;
+  align-items: center;
+  background: #0f1218;
+  border: 1px solid #202634;
+  border-radius: 10px;
+  padding: .6rem .8rem;
 }
+.track .name { font-weight: 600; letter-spacing: .2px; }
+.track .toggles { display: flex; gap: .4rem; }
+.track .toggles .tbtn {
+  background: #1a1f2a; color: var(--fg);
+  border: 1px solid #2a3242; border-radius: 8px; padding: .35rem .6rem; cursor: pointer;
+}
+.track .toggles .tbtn.active { border-color: var(--ok); }
+.track .toggles .tbtn.mute.active { border-color: var(--danger); }
+.track .vol { display: flex; align-items: center; gap: .5rem; }
+.track .vol input[type=range] { width: 120px; accent-color: var(--brand); }
 
-.track-name {
-    flex: 1;
-    font-weight: 500;
-}
-
-.track-buttons {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.track-buttons button {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.8rem;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    background-color: #eee;
-    color: #333;
-    transition: background-color 0.2s ease;
-}
-
-.track-buttons button.active {
-    background-color: #ffb703;
-    color: #222;
-}
-
-.track-buttons button:hover {
-    background-color: #ddd;
-}
-
-footer {
-    background: #f0f0f0;
-    padding: 1rem;
-    text-align: center;
-    font-size: 0.8rem;
-    color: #666;
-}
+.hint { margin-top: 1rem; color: var(--muted); }
+code { background: #151923; padding: .1rem .35rem; border-radius: 6px; border: 1px solid #1e2432; }
